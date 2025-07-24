@@ -7,7 +7,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 BOT_TOKEN = '7766705322:AAH6rVSN0jgE0-7mrnrJCM0Vk9iDBGRRpZs'
-CHAT_ID = -4919653671  # Include -100 if it's a group
+CHAT_ID = -4919653671  # ✅ Your group chat ID as an integer (with minus sign)
 
 running = False
 emoji = "❤️"
@@ -37,11 +37,31 @@ def love_loop():
 def telegram_webhook():
     global running, emoji
     data = request.json
+
+    # 🔍 Save all incoming updates to debug.txt
+    try:
+        with open("debug.txt", "a") as f:
+            f.write(str(data) + "\n\n")
+    except Exception as e:
+        print("Debug log error:", e)
+
     message = data.get("message", {})
     text = message.get("text", "")
-    chat_id = str(message.get("chat", {}).get("id"))
+    chat_id = message.get("chat", {}).get("id")
 
-    if chat_id != str(CHAT_ID):
+    if not text or not chat_id:
+        return "Invalid message", 200
+
+    # 🔐 DEBUG command — responds to anyone
+    if text == "/debug":
+        requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data={
+            "chat_id": chat_id,
+            "text": f"Your chat ID is: {chat_id}"
+        })
+        return "OK"
+
+    # ✅ Restrict all other commands to your configured group
+    if chat_id != CHAT_ID:
         return "Unauthorized", 403
 
     if text == "/startlove":
