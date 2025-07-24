@@ -7,7 +7,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 BOT_TOKEN = '7766705322:AAH6rVSN0jgE0-7mrnrJCM0Vk9iDBGRRpZs'
-CHAT_ID = '-4919653671'  # Include -100 if it's a group
+CHAT_ID = -4919653671  # Include -100 if it's a group
 
 running = False
 emoji = "❤️"
