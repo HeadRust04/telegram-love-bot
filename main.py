@@ -9,7 +9,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
+BOT_TOKEN = '7766705322:AAH6rVSN0jgE0-7mrnrJCM0Vk9iDBGRRpZs'
 CHAT_ID = -4919653671  # Replace with your actual group ID
 
 running = False
