@@ -33,7 +33,7 @@ def love_loop():
         send_message(f"I love you {emoji}")
         time.sleep(10)
 
-@app.route(f"/{BOT_TOKEN}", methods=["POST"])
+@app.route("/webhook", methods=["POST"])
 def telegram_webhook():
     global running, emoji
     data = request.json
