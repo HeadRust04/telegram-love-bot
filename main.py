@@ -76,7 +76,9 @@ def telegram_webhook():
     text = message.get("text", "")
     chat_id = message.get("chat", {}).get("id")
 
-    if chat_id is not None and chat_id != CHAT_ID:
+    print("Incoming Chat ID:", chat_id)
+if chat_id is not None and chat_id != CHAT_ID:
+    send_message(f"⚠️ Mismatch: Got {chat_id}, expected {CHAT_ID}")
     return "Unauthorized", 403
 
     if text == "/startlove":
