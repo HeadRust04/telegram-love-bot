@@ -8,7 +8,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 BOT_TOKEN = '7766705322:AAH6rVSN0jgE0-7mrnrJCM0Vk9iDBGRRpZs'
-CHAT_ID = -1002868780439  # ✅ Updated to correct group ID
+CHAT_ID = -4771539927  # ✅ Updated to correct group ID
 
 running = False
 emoji = "❤️"
