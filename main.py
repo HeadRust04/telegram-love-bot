@@ -76,10 +76,20 @@ def telegram_webhook():
     text = message.get("text", "")
     chat_id = message.get("chat", {}).get("id")
 
-    #if chat_id != CHAT_ID:
-        #return "Unauthorized", 403
+    # Debug logging
+    print("=== Incoming Update ===", flush=True)
+    print(data, flush=True)
+    print(f"Chat ID: {chat_id}, Text: {text}", flush=True)
 
-    if text == "/startlove":
+    # Always reply to see what command is being received
+    send_message(f"Debug: Received '{text}'")
+
+    # Ignore if wrong chat
+    if chat_id != CHAT_ID:
+        return "OK"
+
+    # Command handlers - using startswith to handle /command@botname
+    if text.startswith("/startlove"):
         if not running:
             running = True
             threading.Thread(target=love_loop).start()
@@ -87,7 +97,7 @@ def telegram_webhook():
         else:
             send_message("Already running 💕")
 
-    elif text == "/stoplove":
+    elif text.startswith("/stoplove"):
         running = False
         send_message("Stopped love messages 🛑")
 
@@ -97,18 +107,18 @@ def telegram_webhook():
             emoji = parts[1].strip()
             send_message(f"Emoji updated to {emoji} 🎉")
 
-    elif text == "/greet":
+    elif text.startswith("/greet"):
         send_message(get_greeting())
 
-    elif text == "/burst":
+    elif text.startswith("/burst"):
         for _ in range(5):
             send_message(f"I love you {emoji}")
 
-    elif text == "/lovemeter":
+    elif text.startswith("/lovemeter"):
         percent = random.randint(75, 100)
         send_message(f"Your love today is: {percent}% {emoji}")
 
-    elif text == "/surprise":
+    elif text.startswith("/surprise"):
         options = [
             f"Just thinking of you {emoji}",
             f"Hey {nickname}, you're my whole world 🌍",
@@ -129,7 +139,7 @@ def telegram_webhook():
             nickname = parts[2]
             send_message(f"Nickname updated to {nickname} 💍")
 
-    elif text == "/nickname":
+    elif text.startswith("/nickname"):
         send_message(f"Your current nickname is: {nickname}")
 
     elif text.startswith("/settheme"):
@@ -138,7 +148,7 @@ def telegram_webhook():
             theme = parts[1].strip().lower()
             send_message(f"Theme set to: {theme} 🎨")
 
-    elif text == "/randomlove":
+    elif text.startswith("/randomlove"):
         lines = [
             f"Falling for you more every day, {nickname} 😍",
             f"You light up my heart ✨",
@@ -155,7 +165,7 @@ def telegram_webhook():
             memory.append(parts[2])
             send_message("Memory saved 📓")
 
-    elif text == "/memory recall":
+    elif text.startswith("/memory recall"):
         if memory:
             send_message(f"Remember this? {random.choice(memory)}")
         else:
@@ -185,7 +195,7 @@ def telegram_webhook():
             else:
                 send_message(f"No message scheduled at {time_str} ❓")
 
-    elif text == "/debug":
+    elif text.startswith("/debug"):
         send_message(f"Your chat ID is: {chat_id}")
 
     return "OK"
