@@ -76,8 +76,8 @@ def telegram_webhook():
     text = message.get("text", "")
     chat_id = message.get("chat", {}).get("id")
 
-    if chat_id != CHAT_ID:
-        return "Unauthorized", 403
+    if chat_id is not None and chat_id != CHAT_ID:
+    return "Unauthorized", 403
 
     if text == "/startlove":
         if not running:
