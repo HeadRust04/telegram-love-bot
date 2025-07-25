@@ -1,5 +1,3 @@
-# telegram_love_bot/main.py
-
 import requests
 import time
 import datetime
@@ -10,7 +8,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 BOT_TOKEN = '7766705322:AAH6rVSN0jgE0-7mrnrJCM0Vk9iDBGRRpZs'
-CHAT_ID = -1002868780439  # Replace with your actual group ID
+CHAT_ID = -1002868780439  # ✅ Updated to correct group ID
 
 running = False
 emoji = "❤️"
@@ -21,16 +19,12 @@ mood = "romantic"
 theme = "default"
 scheduled_messages = {}  # {"08:00": "Good morning, baby!"}
 
-
-# === Utility Functions ===
+# ✅ Send message with full debug
 def send_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": CHAT_ID,
-        "text": text
-    }
+    payload = {"chat_id": CHAT_ID, "text": text}
     r = requests.post(url, data=payload)
-    print("SendMessage Status:", r.status_code, r.text, flush=True)
+    print("SendMessage Response:", r.status_code, r.text, flush=True)
 
 def get_greeting():
     hour = datetime.datetime.now().hour
@@ -41,8 +35,7 @@ def get_greeting():
     else:
         return f"Good night cutieee {nickname} 🌙"
 
-
-# === Love Loop Thread ===
+# ✅ Love loop
 def love_loop():
     global running
     while running:
@@ -57,8 +50,7 @@ def love_loop():
         send_message(text)
         time.sleep(love_interval)
 
-
-# === Scheduler Thread ===
+# ✅ Scheduler thread
 def scheduler_loop():
     while True:
         now = datetime.datetime.now().strftime("%H:%M")
@@ -68,8 +60,7 @@ def scheduler_loop():
 
 threading.Thread(target=scheduler_loop, daemon=True).start()
 
-
-# === Flask Webhook Endpoint ===
+# ✅ Webhook handler
 @app.route("/webhook", methods=["POST"])
 def telegram_webhook():
     global running, emoji, love_interval, nickname, memory, mood, theme, scheduled_messages
@@ -78,19 +69,12 @@ def telegram_webhook():
     text = message.get("text", "")
     chat_id = message.get("chat", {}).get("id")
 
-    # Debug logging
-    print("=== Incoming Update ===", flush=True)
-    print(data, flush=True)
-    print(f"Chat ID: {chat_id}, Text: {text}", flush=True)
+    print("Incoming Update:", data, flush=True)
+    send_message(f"Debug: Received '{text}'")  # ✅ always reply for now
 
-    # Always reply to see what command is being received
-    send_message(f"Debug: Received '{text}'")
-
-    # Ignore if wrong chat
     if chat_id != CHAT_ID:
         return "OK"
 
-    # Command handlers - using startswith to handle /command@botname
     if text.startswith("/startlove"):
         if not running:
             running = True
@@ -202,11 +186,9 @@ def telegram_webhook():
 
     return "OK"
 
-
 @app.route("/", methods=["GET"])
 def index():
     return "Bot is running!"
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
