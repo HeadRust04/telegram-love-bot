@@ -24,11 +24,13 @@ scheduled_messages = {}  # {"08:00": "Good morning, baby!"}
 
 # === Utility Functions ===
 def send_message(text):
-    requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data={
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {
         "chat_id": CHAT_ID,
         "text": text
-    })
-
+    }
+    r = requests.post(url, data=payload)
+    print("SendMessage Status:", r.status_code, r.text, flush=True)
 
 def get_greeting():
     hour = datetime.datetime.now().hour
